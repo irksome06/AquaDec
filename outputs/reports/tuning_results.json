@@ -1,0 +1,13 @@
+{
+  "best_params": {
+    "subsample": 0.8,
+    "n_estimators": 200,
+    "min_child_weight": 1,
+    "max_depth": 8,
+    "learning_rate": 0.1,
+    "colsample_bytree": 0.9
+  },
+  "best_cv_macro_f1": 0.5978372830496794,
+  "cv_folds": 5,
+  "n_iter_searched": 15
+}

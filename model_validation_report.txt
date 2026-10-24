@@ -1,0 +1,288 @@
+================================================================================
+      DECISION TREE MODEL VALIDATION & ACCURACY AUDIT REPORT
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+1. DATA LOADING & INTEGRITY CHECKS
+────────────────────────────────────────────────────────────────────────────────
+Loading dataset from: clean_data.csv
+Dataset shape: 3688 rows, 24 columns
+Total missing values: 0
+
+Target column confirmed      : 'severity4' (Present: True)
+Location group column        : 'location_group' (Used ONLY as grouping for splits)
+Features included in X (22): ['data_provider', 'region', 'distance_to_water_m', 'tmax_c', 'tmin_c', 'prcp_mm', 'wind_ms', 'rain_sum_7d_mm', 'tmax_mean_7d_c', 'n_water_px', 'B02', 'B03', 'B04', 'B05', 'B08', 'NDCI', 'NDVI', 'NDWI', 's2_days_offset', 's2_cloud_pct', 'year', 'month']
+Suspicious target-like cols  : None found
+Target leaks in feature set X: 0 (Verified clean)
+
+Categorical features (2) : ['data_provider', 'region'] -> One-Hot Encoded (handle_unknown='ignore')
+Numeric features     (20) : ['distance_to_water_m', 'tmax_c', 'tmin_c', 'prcp_mm', 'wind_ms', 'rain_sum_7d_mm', 'tmax_mean_7d_c', 'n_water_px', 'B02', 'B03', 'B04', 'B05', 'B08', 'NDCI', 'NDVI', 'NDWI', 's2_days_offset', 's2_cloud_pct', 'year', 'month'] -> Passthrough (unscaled, tree invariant)
+
+────────────────────────────────────────────────────────────────────────────────
+2. LOCATION-BASED TRAIN-TEST SPLIT (GroupShuffleSplit)
+────────────────────────────────────────────────────────────────────────────────
+Train samples count : 2927 (79.4%) across 1143 unique locations
+Test samples count  : 761 (20.6%) across 286 unique locations
+Overlapping locations between Train & Test: 0 (Strictly zero spatial leakage)
+
+Target class distribution:
+           Train Count  Train %  Test Count  Test %
+severity4                                          
+1                  991    33.86         264   34.69
+2                  577    19.71         161   21.16
+3                  693    23.68         199   26.15
+4                  666    22.75         137   18.00
+
+────────────────────────────────────────────────────────────────────────────────
+3. MODEL PIPELINE RECONSTRUCTION & HYPERPARAMETERS
+────────────────────────────────────────────────────────────────────────────────
+Pipeline Configuration:
+  • Preprocessor: ColumnTransformer (OneHotEncoder for cat_cols, Passthrough for num_cols)
+  • Classifier  : DecisionTreeClassifier(criterion='entropy', max_depth=8,
+                                         min_samples_leaf=20, min_samples_split=2,
+                                         class_weight='balanced', random_state=42)
+  • Test set usage: Strictly evaluated after fitting on training set only.
+
+Features after one-hot encoding (38 total features):
+   1. cat__data_provider_Bureau_of_Water_Kansas_Department_of_Health_and_Environment
+   2. cat__data_provider_California_Environmental_Data_Exchange_Network
+   3. cat__data_provider_Connecticut_State_Department_of_Public_Health
+   4. cat__data_provider_Delaware_National_Resources_and_the_University_of_Delaware's_Citizen_Monitoring_Program
+   5. cat__data_provider_EPA_Central_Data_Exchange
+   6. cat__data_provider_EPA_National_Aquatic_Research_Survey
+   7. cat__data_provider_EPA_Water_Quality_Data_Portal
+   8. cat__data_provider_Indiana_State_Department_of_Health
+   9. cat__data_provider_NC_Division_of_Water_Resources_NC_Department_of_Environmental_Quality
+  10. cat__data_provider_New_Mexico_Environment_Department
+  11. cat__data_provider_Pennsylvania_Department_of_Environmental_Protection
+  12. cat__data_provider_Texas_Commission_on_Environmental_Quality
+  13. cat__data_provider_US_Army_Corps_of_Engineers
+  14. cat__data_provider_Wyoming_Department_of_Environmental_Quality
+  15. cat__region_midwest
+  16. cat__region_northeast
+  17. cat__region_south
+  18. cat__region_west
+  19. num__distance_to_water_m
+  20. num__tmax_c
+  21. num__tmin_c
+  22. num__prcp_mm
+  23. num__wind_ms
+  24. num__rain_sum_7d_mm
+  25. num__tmax_mean_7d_c
+  26. num__n_water_px
+  27. num__B02
+  28. num__B03
+  29. num__B04
+  30. num__B05
+  31. num__B08
+  32. num__NDCI
+  33. num__NDVI
+  34. num__NDWI
+  35. num__s2_days_offset
+  36. num__s2_cloud_pct
+  37. num__year
+  38. num__month
+
+────────────────────────────────────────────────────────────────────────────────
+4. FINAL MODEL EVALUATION METRICS
+────────────────────────────────────────────────────────────────────────────────
+SUMMARY PERFORMANCE TABLE:
+  Metric                    Train        Test         Difference (Train - Test)
+  ------------------------- ------------ ------------ -------------------------
+  Accuracy                  0.6365       0.5729       +0.0636
+  Balanced Accuracy         0.6148       0.5606       +0.0542
+  Macro F1                  0.6193       0.5726       +0.0467
+  Weighted F1               -            0.5716       -
+
+PER-CLASS CLASSIFICATION REPORT (Test Set):
+              precision    recall  f1-score   support
+
+  Severity 1     0.5994    0.7311    0.6587       264
+  Severity 2     0.3289    0.3043    0.3161       161
+  Severity 3     0.5055    0.4623    0.4829       199
+  Severity 4     0.9444    0.7445    0.8327       137
+
+    accuracy                         0.5729       761
+   macro avg     0.5945    0.5606    0.5726       761
+weighted avg     0.5797    0.5729    0.5716       761
+
+FULL CONFUSION MATRIX (Rows: Actual, Columns: Predicted):
+                   Pred Severity 1  Pred Severity 2  Pred Severity 3  Pred Severity 4
+Actual Severity 1              193               50               20                1
+Actual Severity 2               69               49               42                1
+Actual Severity 3               56               47               92                4
+Actual Severity 4                4                3               28              102
+
+────────────────────────────────────────────────────────────────────────────────
+5. 5-FOLD GROUPKFOLD CROSS-VALIDATION ON TRAINING DATA
+────────────────────────────────────────────────────────────────────────────────
+Cross-Validation Results across 5 location-held-out folds:
+  • accuracy          : Mean = 0.5808 | Std = 0.0323 | Folds: [0.5324 0.5751 0.6325 0.5726 0.5915]
+  • f1_macro          : Mean = 0.5808 | Std = 0.0128 | Folds: [0.5624 0.5804 0.6027 0.5796 0.5789]
+  • balanced_accuracy : Mean = 0.5726 | Std = 0.0146 | Folds: [0.5519 0.5777 0.5964 0.569  0.5677]
+
+────────────────────────────────────────────────────────────────────────────────
+6. BASELINE DUMMY CLASSIFIER COMPARISON (strategy='most_frequent')
+────────────────────────────────────────────────────────────────────────────────
+Dummy Classifier (predicts majority class '1' always):
+  • Test Accuracy         : 0.3469  (Decision Tree: 0.5729 -> Gain: +0.2260)
+  • Test Balanced Accuracy: 0.2500  (Decision Tree: 0.5606 -> Gain: +0.3106)
+  • Test Macro F1         : 0.1288  (Decision Tree: 0.5726 -> Gain: +0.4438)
+
+Interpretation:
+  The Decision Tree substantially outperforms the majority-class baseline across all metrics.
+  While the dummy classifier achieves 34.69% accuracy by guessing only Class 1, its Balanced
+  Accuracy is only 25.00% and Macro F1 is a dismal 0.1288 (completely failing classes 2, 3, and 4).
+  The Decision Tree exhibits true multi-class discriminating capability across all 4 severity levels.
+
+────────────────────────────────────────────────────────────────────────────────
+7. INVESTIGATION OF 'data_provider' (Proxy / Shortcut Analysis)
+────────────────────────────────────────────────────────────────────────────────
+Top feature in original model: cat__data_provider_California_Environmental_Data_Exchange_Network
+Feature Importance weight    : 0.5520 (55.20%)
+
+Class Distribution of 'severity4' across all 'data_provider' categories:
+severity4                                                                                   1    2    3    4   All
+data_provider                                                                                                     
+Bureau_of_Water_Kansas_Department_of_Health_and_Environment                                30   85  201   51   367
+California_Environmental_Data_Exchange_Network                                              0    1   32  593   626
+Connecticut_State_Department_of_Public_Health                                              59   42   21    3   125
+Delaware_National_Resources_and_the_University_of_Delaware's_Citizen_Monitoring_Program    37   20   23    1    81
+EPA_Central_Data_Exchange                                                                 111   10    0    0   121
+EPA_National_Aquatic_Research_Survey                                                       61  129  139   35   364
+EPA_Water_Quality_Data_Portal                                                              13    0    0    0    13
+Indiana_State_Department_of_Health                                                         51   73  134   23   281
+NC_Division_of_Water_Resources_NC_Department_of_Environmental_Quality                     535  241  168   23   967
+New_Mexico_Environment_Department                                                          23    2    3    0    28
+Pennsylvania_Department_of_Environmental_Protection                                       159   67  139   48   413
+Texas_Commission_on_Environmental_Quality                                                   0    0    6    4    10
+US_Army_Corps_of_Engineers                                                                174   63   15    2   254
+Wyoming_Department_of_Environmental_Quality                                                 2    5   11   20    38
+All                                                                                      1255  738  892  803  3688
+
+Row-wise percentages per data provider (%):
+severity4                                                                                    1     2     3     4
+data_provider                                                                                                   
+Bureau_of_Water_Kansas_Department_of_Health_and_Environment                                8.2  23.2  54.8  13.9
+California_Environmental_Data_Exchange_Network                                             0.0   0.2   5.1  94.7
+Connecticut_State_Department_of_Public_Health                                             47.2  33.6  16.8   2.4
+Delaware_National_Resources_and_the_University_of_Delaware's_Citizen_Monitoring_Program   45.7  24.7  28.4   1.2
+EPA_Central_Data_Exchange                                                                 91.7   8.3   0.0   0.0
+EPA_National_Aquatic_Research_Survey                                                      16.8  35.4  38.2   9.6
+EPA_Water_Quality_Data_Portal                                                            100.0   0.0   0.0   0.0
+Indiana_State_Department_of_Health                                                        18.1  26.0  47.7   8.2
+NC_Division_of_Water_Resources_NC_Department_of_Environmental_Quality                     55.3  24.9  17.4   2.4
+New_Mexico_Environment_Department                                                         82.1   7.1  10.7   0.0
+Pennsylvania_Department_of_Environmental_Protection                                       38.5  16.2  33.7  11.6
+Texas_Commission_on_Environmental_Quality                                                  0.0   0.0  60.0  40.0
+US_Army_Corps_of_Engineers                                                                68.5  24.8   5.9   0.8
+Wyoming_Department_of_Environmental_Quality                                                5.3  13.2  28.9  52.6
+
+Critical Observation:
+  • 'California_Environmental_Data_Exchange_Network' contains 626 total observations.
+    Of these, 593 are Severity 4 (94.7% of this provider's data)!
+    Furthermore, 593 out of all 803 Severity 4 samples (73.8%) in the dataset originate from this single agency.
+  • Similarly, 'EPA_Central_Data_Exchange' contains 91.7% Severity 1, and 'NC Division of Water Resources'
+    contains 55.3% Severity 1.
+  • Consequently, 'data_provider' acts as an administrative/geographical proxy rather than a physical or
+    biological predictor of cyanobacteria bloom severity. A Decision Tree greedily exploits this shortcut,
+    which would fail completely if the model were deployed in a new state or with a new monitoring agency.
+
+Retraining the Decision Tree WITHOUT 'data_provider'...
+
+COMPARISON: WITH vs. WITHOUT 'data_provider':
+           Metric With data_provider Without data_provider Delta (Impact)
+ Overall Accuracy             0.5729                0.4967        -0.0762
+Balanced Accuracy             0.5606                0.5052        -0.0553
+   Macro F1 Score             0.5726                0.5125        -0.0601
+Weighted F1 Score             0.5716                0.5040        -0.0676
+   Train Macro F1             0.6193                0.6165        -0.0028
+   Train Accuracy             0.6365                0.6194        -0.0171
+
+Confusion Matrix WITHOUT data_provider:
+                   Pred Severity 1  Pred Severity 2  Pred Severity 3  Pred Severity 4
+Actual Severity 1              141               72               43                8
+Actual Severity 2               55               50               53                3
+Actual Severity 3               50               57               83                9
+Actual Severity 4                3               13               17              104
+
+Top 15 Features WITHOUT data_provider:
+                 Feature  Importance
+        cat__region_west    0.429232
+num__distance_to_water_m    0.133489
+               num__NDCI    0.082078
+              num__month    0.078849
+         num__n_water_px    0.038309
+               num__NDWI    0.035508
+     num__tmax_mean_7d_c    0.032536
+               num__year    0.030008
+                num__B05    0.029061
+            num__wind_ms    0.016650
+                num__B03    0.016088
+   cat__region_northeast    0.015045
+               num__NDVI    0.013044
+       num__s2_cloud_pct    0.012477
+                num__B02    0.009387
+
+────────────────────────────────────────────────────────────────────────────────
+8. SAVING DIAGNOSTIC PLOTS IN output/
+────────────────────────────────────────────────────────────────────────────────
+  [1] Saved: C:\Users\91889\Desktop\ML Assignment\output\normalized_confusion_matrix.png
+  [2] Saved: C:\Users\91889\Desktop\ML Assignment\output\per_class_metrics.png
+  [3] Saved: C:\Users\91889\Desktop\ML Assignment\output\feature_importance_without_data_provider.png
+
+════════════════════════════════════════════════════════════════════════════════
+9. FINAL VERDICT & METHODOLOGICAL AUDIT
+════════════════════════════════════════════════════════════════════════════════
+
+1. IS THE MODEL WORKING CORRECTLY?
+   YES. The execution pipeline is mathematically and programmatically sound:
+   • Target: Exactly 'severity4', split into 4 classes.
+   • Leakage Prevention: 'location_group' was used exclusively for GroupShuffleSplit and
+     GroupKFold. Exactly 0 location groups overlap between the training set (1,143 locations)
+     and test set (286 locations).
+   • Column Hygiene: 'severity' and 'abundance' are completely omitted from X.
+   • Preprocessing: Categorical columns ('data_provider', 'region') are properly one-hot
+     encoded with 'handle_unknown="ignore"'. Numeric columns are passthrough (unscaled), which
+     is standard best practice for Decision Trees.
+   • Imbalance Handling: 'class_weight="balanced"' properly upweights minority classes (Class 2).
+   • Partitioning Discipline: The test set was strictly held out and NEVER touched during
+     preprocessing, training, or hyperparameter selection.
+
+2. IS IT BETTER THAN A MAJORITY-CLASS BASELINE?
+   YES, BY A SIGNIFICANT MARGIN:
+   • Baseline Dummy Accuracy   : 0.3469 (34.69%) vs. Decision Tree: 0.5729 (57.29%) [+22.60%]
+   • Baseline Balanced Accuracy: 0.2500 (25.00%) vs. Decision Tree: 0.5606 (56.06%) [+31.06%]
+   • Baseline Macro F1         : 0.1288 (0.1288) vs. Decision Tree: 0.5726 (0.5726) [+0.4438]
+   The dummy classifier achieves zero recall on classes 2, 3, and 4. The Decision Tree demonstrates
+   genuine multi-class discriminative power.
+
+3. IS IT OVERFITTING, UNDERFITTING, OR REASONABLY FITTED?
+   REASONABLY FITTED (MILD OVERFITTING):
+   • Train Macro F1 = 0.6193 vs. Test Macro F1 = 0.5726 (Gap: 0.0467)
+   • Train Accuracy = 0.6365 vs. Test Accuracy = 0.5729 (Gap: 0.0636)
+   • 5-Fold GroupKFold CV Macro F1 on Train = 0.5808 +/- 0.0128
+   The CV score (0.5808) aligns closely with the test score (0.5726), confirming that the model's
+   regularization (max_depth=8, min_samples_leaf=20) successfully restrains deep tree memorization.
+   A generalization gap of ~0.04 to 0.06 is expected under strict spatial location holdout.
+
+4. REAL-WORLD RELIABILITY & THE 'data_provider' SHORTCUT:
+   CRITICAL RISK IDENTIFIED:
+   • 'data_provider_California_Environmental_Data_Exchange_Network' accounted for 55.2% - 62.9%
+     of total tree importance.
+   • In the dataset, 94.7% of California CEDEN samples are Severity 4, and 73.8% of all Severity 4
+     samples across the entire dataset come from CEDEN.
+   • 'data_provider' is an administrative artifact and reporting agency signature, NOT an ecological
+     cause of algal blooms.
+   • When retrained WITHOUT 'data_provider', test Macro F1 drops from 0.5726 to 0.5125 (-0.0601),
+     and accuracy drops from 0.5729 to 0.4967 (-0.0762).
+   • Without 'data_provider', the tree shifts reliance to genuine environmental and optical features:
+     'region_west' (42.9%), 'distance_to_water_m' (13.3%), 'NDCI' (8.2%), and 'month' (7.9%).
+   • RECOMMENDATION: For academic baseline benchmarking, the model works as requested. For any real-world
+     lake bloom deployment or environmental policy tool, 'data_provider' MUST be permanently excluded
+     to prevent agency reporting artifacts from dominating model predictions.
+
+════════════════════════════════════════════════════════════════════════════════
+Validation report generation complete.
+Report saved to: C:\Users\91889\Desktop\ML Assignment\model_validation_report.txt
+════════════════════════════════════════════════════════════════════════════════
