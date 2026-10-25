@@ -95,16 +95,6 @@ python run_pipeline.py --models xgboost --skip-tuning
 
 Saved artifacts are written to `artifacts/<model>/model.joblib`.
 
-### Running the API
-
-This repository supplies Python prediction helpers but does not include an HTTP server. A FastAPI adapter can expose them at `/predict_stream`. With an adapter running on port 8000, send a request such as:
-
-```bash
-curl -N -X POST http://localhost:8000/predict_stream -H "Content-Type: application/json" -d '{"prompt":"{\"tmax_c\":30.1,\"tmin_c\":17.0,\"prcp_mm\":0.0,\"wind_ms\":2.4,\"rain_sum_7d_mm\":6.9,\"tmax_mean_7d_c\":31.3,\"B02\":0.08,\"B03\":0.13,\"B04\":0.08,\"B05\":0.13,\"B08\":0.06,\"NDCI\":0.21,\"NDVI\":-0.18,\"NDWI\":0.38,\"n_water_px\":678.0,\"s2_days_offset\":-4.0,\"s2_cloud_pct\":4.6,\"month\":8}"}'
-```
-
-The response contains `predicted_severity` and class probabilities, for example `{"model":"xgboost","predicted_severity":3,"probabilities":{"1":0.1,"2":0.2,"3":0.6,"4":0.1}}`.
-
 ### Making predictions
 
 Call a saved pipeline directly from Python:
