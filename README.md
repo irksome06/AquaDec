@@ -18,10 +18,7 @@ AquaDec is a machine learning project for classifying cyanobacteria bloom severi
 - [Architecture](#architecture)
 - [Model Performance](#model-performance)
 - [Results](#results)
-- [Team Structure](#team-structure)
 - [Testing](#testing)
-- [Future Improvements](#future-improvements)
-- [FAQ](#faq)
 
 ## Quick Start
 
