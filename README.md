@@ -5,7 +5,7 @@
 [![XGBoost](https://img.shields.io/badge/XGBoost-3.4.1-2c3e50.svg)](https://xgboost.readthedocs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-AquaDec is a machine-learning project for classifying cyanobacteria bloom severity in inland waters. The maintained modeling pipeline is in [`lake-bloom-severity/`](lake-bloom-severity/). It trains and evaluates four classifiers using weather observations, Sentinel-2 measurements, image-quality fields, and the observation month.
+AquaDec is a machine learning project for classifying cyanobacteria bloom severity in inland waters. The maintained modeling pipeline is in [`lake-bloom-severity/`](lake-bloom-severity/). It trains and evaluates four classifiers using weather observations, Sentinel-2 measurements, image-quality fields, and the observation month.
 
 ## Table of Contents
 
@@ -19,12 +19,9 @@ AquaDec is a machine-learning project for classifying cyanobacteria bloom severi
 - [Model Performance](#model-performance)
 - [Results](#results)
 - [Team Structure](#team-structure)
-- [Docker](#docker)
 - [Testing](#testing)
 - [Future Improvements](#future-improvements)
 - [FAQ](#faq)
-- [License](#license)
-- [Contact](#contact)
 
 ## Quick Start
 
@@ -166,24 +163,6 @@ These figures describe the committed evaluation split; they are not a guarantee 
 - The fixed location split gives every model the same evaluation basis.
 - Weather, Sentinel-2, image-quality, and month features are used; known leakage and metadata fields are excluded.
 
-## Team Structure
-
-| Role | Members | Responsibility |
-| --- | --- | --- |
-| Project team | AquaDec contributors | Dataset preparation, modeling, evaluation, and integration |
-| ML development | Pipeline contributors | Training, tuning, and artifact maintenance |
-| Backend integration | Backend team | API adapter and service deployment |
-| Documentation | Project maintainers | Reproducibility, tests, and documentation |
-
-## Docker
-
-The repository does not currently include a Dockerfile. When one is added for the API adapter, use:
-
-```bash
-docker build -t aquadec-lake-bloom .
-docker run --rm -p 8000:8000 aquadec-lake-bloom
-```
-
 ## Testing
 
 Run the tests from the `lake-bloom-severity/` directory:
@@ -193,32 +172,3 @@ pytest
 ```
 
 The project contribution guidance is in [`lake-bloom-severity/CONTRIBUTING.md`](lake-bloom-severity/CONTRIBUTING.md).
-
-## Future Improvements
-
-- Add a versioned HTTP service and health endpoint around the serving helpers.
-- Add probability calibration and operational alert thresholds.
-- Evaluate temporal and geographic drift on newer observations.
-- Monitor input ranges, missing values, and prediction distributions.
-- Add a Dockerfile and deployment configuration for the backend adapter.
-- Expand integration tests between the frontend, API, and model-serving contract.
-
-## FAQ
-
-**Which model should I use?** XGBoost has the best recorded result in the committed comparison, but all four artifacts are available.
-
-**Does the repository include an HTTP API?** No. It includes Python prediction helpers; a backend service can wrap them.
-
-**What does the model return?** A severity class from 1 through 4 and probabilities for all four classes when supported.
-
-**Can I rebuild the processed dataset?** Yes. Place `caml_weather_sat.csv` in `data/raw/` and run `preprocessing/preprocess.py`.
-
-**Are `year` and `region` model inputs?** No. They are excluded from training and rejected by the serving schema.
-
-## License
-
-This project is intended to be released under the MIT License. Add the repository `LICENSE` file before publishing a formal license grant.
-
-## Contact
-
-For project questions, open an issue or contact the AquaDec maintainers through the [GitHub repository](https://github.com/irksome06/AquaDec). Add the team’s preferred name, email address, and institution when those details are finalized.
