@@ -1,0 +1,22 @@
+name: random_forest
+defaults:
+  n_estimators: 300
+  min_samples_leaf: 2
+  max_depth: null
+  class_weight: balanced_subsample
+  n_jobs: -1
+  random_state: 42
+preprocessing:
+  scale: false
+  log_transform: false
+  cyclic_month: false
+  feature_selection:
+    enabled: false
+    k: 12
+tuning:
+  n_iter: 8
+  scoring: f1_macro
+  param_distributions:
+    classifier__n_estimators: [150, 300, 500]
+    classifier__max_depth: [8, 12, 16, null]
+    classifier__min_samples_leaf: [1, 2, 4]

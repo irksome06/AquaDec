@@ -1,0 +1,28 @@
+metrics:
+  primary: "macro_f1"
+  all:
+    - "accuracy"
+    - "balanced_accuracy"
+    - "macro_f1"
+    - "weighted_f1"
+  per_class:
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "support"
+
+plots:
+  confusion_matrix: "confusion_matrix.png"
+  comparison_chart: "results/comparison/comparison.png"
+
+comparisons:
+  dummy_baseline:
+    enabled: true
+    strategy: "most_frequent"
+
+# Extra GroupShuffleSplit folds on training locations only (does not replace frozen test).
+repeated_splits:
+  enabled: true
+  n_splits: 3
+  test_size: 0.2
+  random_state: 42

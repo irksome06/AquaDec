@@ -1,0 +1,5 @@
+best_params:
+  classifier__n_estimators: 300
+  classifier__min_samples_leaf: 2
+  classifier__max_depth: 12
+best_cv_score: 0.519540680392685

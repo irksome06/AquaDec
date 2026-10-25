@@ -1,0 +1,52 @@
+{
+  "model_name": "svm",
+  "version": "1.0.0",
+  "created_at": "2026-10-25T11:56:57.282284+00:00",
+  "features": [
+    "tmax_c",
+    "tmin_c",
+    "prcp_mm",
+    "wind_ms",
+    "rain_sum_7d_mm",
+    "tmax_mean_7d_c",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B08",
+    "NDCI",
+    "NDVI",
+    "NDWI",
+    "n_water_px",
+    "s2_days_offset",
+    "s2_cloud_pct",
+    "month"
+  ],
+  "excluded": [
+    "year",
+    "distance_to_water_m",
+    "region",
+    "data_provider",
+    "severity",
+    "abundance",
+    "severity4",
+    "location_group"
+  ],
+  "n_train": 2927,
+  "n_test": 761,
+  "train_metrics": {
+    "accuracy": 0.6385377519644687,
+    "balanced_accuracy": 0.6132420912410053,
+    "macro_f1": 0.6067307409303646
+  },
+  "params": {
+    "gamma": 0.01,
+    "C": 100.0
+  },
+  "library_versions": {
+    "scikit-learn": "1.9.1",
+    "xgboost": "3.4.1",
+    "joblib": "1.6.0"
+  },
+  "artifact": "artifacts/svm/model.joblib"
+}

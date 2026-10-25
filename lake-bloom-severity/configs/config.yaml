@@ -1,0 +1,47 @@
+# Shared paths, features, frozen split, processed-data checksum.
+paths:
+  raw_data: "data/raw/caml_weather_sat.csv"
+  processed_data: "data/processed/clean_data.csv"
+  splits: "data/splits/splits.csv"
+  model_dir: "outputs/models"
+  reports_dir: "outputs/reports"
+  artifacts_dir: "artifacts"
+  input_schema: "serving/input_schema.json"
+
+data:
+  target_col: "severity4"
+  group_col: "location_group"
+  checksum_sha256: "ef563ef33fc8dde036d223eea396fff85cfcaf1b5449487b8c427d0b95c72c98"
+  feature_cols:
+    - "tmax_c"
+    - "tmin_c"
+    - "prcp_mm"
+    - "wind_ms"
+    - "rain_sum_7d_mm"
+    - "tmax_mean_7d_c"
+    - "B02"
+    - "B03"
+    - "B04"
+    - "B05"
+    - "B08"
+    - "NDCI"
+    - "NDVI"
+    - "NDWI"
+    - "n_water_px"
+    - "s2_days_offset"
+    - "s2_cloud_pct"
+    - "month"
+  forbidden_cols:
+    - "year"
+    - "distance_to_water_m"
+    - "region"
+    - "data_provider"
+    - "severity"
+    - "abundance"
+    - "severity4"
+    - "location_group"
+
+split:
+  test_size: 0.2
+  random_state: 42
+  cv_folds: 5

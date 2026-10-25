@@ -1,0 +1,24 @@
+name: lake-bloom-severity-ci
+
+on:
+  pull_request:
+  push:
+    paths:
+      - "lake-bloom-severity/**"
+      - ".github/workflows/lake-bloom-severity-ci.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lake-bloom-severity
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run tests
+        run: pytest -q

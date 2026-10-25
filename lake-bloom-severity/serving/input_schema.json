@@ -1,0 +1,149 @@
+{
+  "target": "severity4",
+  "classes": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "required": [
+    "tmax_c",
+    "tmin_c",
+    "prcp_mm",
+    "wind_ms",
+    "rain_sum_7d_mm",
+    "tmax_mean_7d_c",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B08",
+    "NDCI",
+    "NDVI",
+    "NDWI",
+    "n_water_px",
+    "s2_days_offset",
+    "s2_cloud_pct",
+    "month"
+  ],
+  "forbidden": [
+    "year",
+    "distance_to_water_m",
+    "region",
+    "data_provider",
+    "severity",
+    "abundance",
+    "severity4",
+    "location_group"
+  ],
+  "fields": [
+    {
+      "name": "tmax_c",
+      "type": "number",
+      "min": -2.2,
+      "max": 42.8
+    },
+    {
+      "name": "tmin_c",
+      "type": "number",
+      "min": -10.0,
+      "max": 28.9
+    },
+    {
+      "name": "prcp_mm",
+      "type": "number",
+      "min": 0.0,
+      "max": 149.9
+    },
+    {
+      "name": "wind_ms",
+      "type": "number",
+      "min": 0.0,
+      "max": 15.0
+    },
+    {
+      "name": "rain_sum_7d_mm",
+      "type": "number",
+      "min": 0.0,
+      "max": 284.8
+    },
+    {
+      "name": "tmax_mean_7d_c",
+      "type": "number",
+      "min": 1.6714285714285717,
+      "max": 41.66
+    },
+    {
+      "name": "B02",
+      "type": "number",
+      "min": 0.00205,
+      "max": 0.8942
+    },
+    {
+      "name": "B03",
+      "type": "number",
+      "min": 0.0024,
+      "max": 0.7954
+    },
+    {
+      "name": "B04",
+      "type": "number",
+      "min": 0.002,
+      "max": 0.7005
+    },
+    {
+      "name": "B05",
+      "type": "number",
+      "min": 0.0005,
+      "max": 0.7117
+    },
+    {
+      "name": "B08",
+      "type": "number",
+      "min": 0.002,
+      "max": 0.6668000000000001
+    },
+    {
+      "name": "NDCI",
+      "type": "number",
+      "min": -0.6153846153846154,
+      "max": 0.6042780748663101
+    },
+    {
+      "name": "NDVI",
+      "type": "number",
+      "min": -0.8217468805704101,
+      "max": 0.7490494296577946
+    },
+    {
+      "name": "NDWI",
+      "type": "number",
+      "min": -0.7758620689655171,
+      "max": 0.898477157360406
+    },
+    {
+      "name": "n_water_px",
+      "type": "number",
+      "min": 20.0,
+      "max": 10000.0
+    },
+    {
+      "name": "s2_days_offset",
+      "type": "number",
+      "min": -10.0,
+      "max": 10.0
+    },
+    {
+      "name": "s2_cloud_pct",
+      "type": "number",
+      "min": 0.004101,
+      "max": 39.987107
+    },
+    {
+      "name": "month",
+      "type": "integer",
+      "min": 1.0,
+      "max": 12.0
+    }
+  ]
+}

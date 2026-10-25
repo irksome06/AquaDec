@@ -1,0 +1,8 @@
+best_params:
+  classifier__estimator__subsample: 0.8
+  classifier__estimator__n_estimators: 150
+  classifier__estimator__min_child_weight: 2
+  classifier__estimator__max_depth: 8
+  classifier__estimator__learning_rate: 0.05
+  classifier__estimator__colsample_bytree: 0.7
+best_cv_score: 0.5337531924429773

@@ -1,0 +1,19 @@
+name: svm
+defaults:
+  kernel: rbf
+  class_weight: balanced
+  C: 1.0
+  gamma: scale
+preprocessing:
+  scale: true
+  log_transform: true
+  cyclic_month: true
+  feature_selection:
+    enabled: false
+    k: 12
+tuning:
+  n_iter: 6
+  scoring: f1_macro
+  param_distributions:
+    classifier__estimator__C: [0.1, 1.0, 10.0, 100.0]
+    classifier__estimator__gamma: ["scale", 0.01, 0.03, 0.1]

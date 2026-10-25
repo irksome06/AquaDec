@@ -1,0 +1,3 @@
+best_params:
+  classifier__C: 1.0
+best_cv_score: 0.42709145313718516

@@ -1,0 +1,4 @@
+best_params:
+  classifier__estimator__gamma: 0.01
+  classifier__estimator__C: 100.0
+best_cv_score: 0.4823024473306212

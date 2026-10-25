@@ -1,0 +1,18 @@
+name: logistic_regression
+defaults:
+  max_iter: 5000
+  class_weight: balanced
+  solver: lbfgs
+  C: 1.0
+preprocessing:
+  scale: true
+  log_transform: true
+  cyclic_month: true
+  feature_selection:
+    enabled: false
+    k: 12
+tuning:
+  n_iter: 10
+  scoring: f1_macro
+  param_distributions:
+    classifier__C: [0.01, 0.1, 1.0, 10.0, 100.0]

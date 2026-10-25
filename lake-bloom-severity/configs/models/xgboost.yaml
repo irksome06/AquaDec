@@ -1,0 +1,32 @@
+name: xgboost
+defaults:
+  objective: multi:softprob
+  eval_metric: mlogloss
+  num_class: 4
+  n_estimators: 150
+  max_depth: 6
+  learning_rate: 0.05
+  subsample: 0.8
+  colsample_bytree: 0.8
+  min_child_weight: 2
+  gamma: 0.1
+  n_jobs: -1
+  random_state: 42
+balanced_sample_weight: true
+preprocessing:
+  scale: false
+  log_transform: false
+  cyclic_month: false
+  feature_selection:
+    enabled: false
+    k: 12
+tuning:
+  n_iter: 10
+  scoring: f1_macro
+  param_distributions:
+    classifier__estimator__n_estimators: [100, 150, 200]
+    classifier__estimator__max_depth: [4, 6, 8]
+    classifier__estimator__learning_rate: [0.03, 0.05, 0.1]
+    classifier__estimator__subsample: [0.7, 0.8, 0.9]
+    classifier__estimator__colsample_bytree: [0.7, 0.8, 0.9]
+    classifier__estimator__min_child_weight: [1, 2, 4]
